@@ -108,12 +108,11 @@ void ImageConv_v1(queue &q, float *image_in, float *image_out, float sin_theta,
         float rotated_x, rotated_y;
 
 	// Rotation by an angle theta
-	rotated_x = (cos_theta * (float)(x1-x0) + sin_theta * (float)(y1-y0));
-	rotated_y = (-1 * sin_theta * (float)(x1-x0) + cos_theta * (float)(y1-y0));
+	//rotated_x = (cos_theta * (float)(x1-x0) + sin_theta * (float)(y1-y0));
+	//rotated_y = (-1 * sin_theta * (float)(x1-x0) + cos_theta * (float)(y1-y0));
 	
-	//working
-	//rotated_x = ((-1*sin_theta * (float)(y1-y0) + x0) + cos_theta * (float)(x1-x0));
-	//rotated_y = (sin_theta * (float)(x1-x0) + cos_theta * (float)(y1-y0) + y0);
+	rotated_x = ((-1*sin_theta * (float)(y1-y0) + x0) + cos_theta * (float)(x1-x0));
+	rotated_y = (sin_theta * (float)(x1-x0) + cos_theta * (float)(y1-y0) + y0);
 	
 
 	// Coordinates of a point (x1, y1) when rotated by an angle theta around (x0, y0) become (x2, y2)
