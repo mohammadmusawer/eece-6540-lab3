@@ -1,13 +1,6 @@
-//==============================================================
 // Image Rotation with DPC++
 //
 // Author: Mohammad Musawer
-//
-// MIT License
-//
-//
-//
-//
 //
 #include <CL/sycl.hpp>
 #include <cmath>
@@ -25,7 +18,6 @@ using namespace sycl;
 #include "bmp-utils.h"
 #include "gold.h"
 
-
 using Duration = std::chrono::duration<double>;
 class Timer {
  public:
@@ -42,9 +34,6 @@ class Timer {
 
 static const char* inputImagePath = "./Images/cat.bmp";
 
-
-
-
 #define IMAGE_SIZE (720*1080)
 constexpr size_t array_size = IMAGE_SIZE;
 typedef std::array<float, array_size> FloatArray;
@@ -57,15 +46,9 @@ void ImageConv_v1(queue &q, float *image_in, float *image_out, float sin_theta,
 {
 
     // We create buffers for the input and output data.
-    //
-    //
     buffer<float, 1> image_in_buf(image_in, range<1>(ImageRows*ImageCols));
     buffer<float, 1> image_out_buf(image_out, range<1>(ImageRows*ImageCols));
 
-    //for(int i=0; i<ImageRows; i++) {
-    //  for(int j=0; j<ImageCols; j++)
-    //    std::cout << "image_out[" << i << "," << j << "]=" << (float *)image_out[i*ImageCols+j] << std::endl;
-    //}
 
     // Create the range object for the pixel data.
     range<2> num_items{ImageRows, ImageCols};
@@ -190,12 +173,11 @@ int main() {
   /* Read in the BMP image */
   hInputImage = readBmpFloat(inputImagePath, &imageRows, &imageCols);
   printf("imageRows=%d, imageCols=%d\n", imageRows, imageCols);
-  //printf("filterWidth=%d, \n", filterWidth);
+
   /* Allocate space for the output image */
   hOutputImage = (float *)malloc( imageRows*imageCols * sizeof(float) );
   for(i=0; i<imageRows*imageCols; i++)
     hOutputImage[i] = 1.0;
-
 
   Timer t;
 
@@ -216,33 +198,9 @@ int main() {
   std::cout << t.elapsed().count() << " seconds\n";
 
   /* Save the output bmp */
-  printf("Output image saved as: cat-rotated.bmp\n");
+  printf("Image was rotated %d degrees and output was saved as: cat-rotated.bmp\n", angle_theta);
   writeBmpFloat(hOutputImage, "cat-rotated.bmp", imageRows, imageCols,
           inputImagePath);
 
-//#ifndef FPGA_PROFILE
-  /* Verify result 
-  float *refOutput = convolutionGoldFloat(hInputImage, imageRows, imageCols,
-    filter, filterWidth);
-
-  writeBmpFloat(refOutput, "cat-filtered-ref.bmp", imageRows, imageCols,
-          inputImagePath);
-
-  bool passed = true;
-  for (i = 0; i < imageRows*imageCols; i++) {
-    if (fabsf(refOutput[i]-hOutputImage[i]) > 0.001f) {
-        printf("%f %f\n", refOutput[i], hOutputImage[i]);
-        passed = false;
-    }
-  }
-  if (passed) {
-    printf("Passed!\n");
-    std::cout << "Image Convolution successfully completed on device.\n";
-  }
-  else {
-    printf("Failed!\n");
-  }
-#endif
-*/
   return 0;
 }
